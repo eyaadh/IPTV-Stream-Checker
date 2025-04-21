@@ -1,0 +1,6 @@
+[Telegram]
+bot_token = 443803693:AAE7CQhMNiHoOGf3IG79....
+chat_id = -1002100841898
+
+[Streams]
+udp_streams = udp://@230.1.1.1:1234,udp://@230.1.1.90:1234
