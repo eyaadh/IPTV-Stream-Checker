@@ -217,7 +217,7 @@ def main():
     scheduler = BackgroundScheduler()
     
     # Schedule the task to run every 5 minutes
-    scheduler.add_job(scheduled_task, 'interval', seconds=10)
+    scheduler.add_job(scheduled_task, 'interval', minutes=5)
     
     # Start the scheduler
     logger.info("Starting scheduler...")
