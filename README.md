@@ -1,88 +1,106 @@
 # 🔍 IPTV UDP Stream Checker with Telegram Alerts
 
-This Python script monitors a list of UDP streams (unicast or multicast) and sends a Telegram notification if any streams are inactive or unreachable.
+This Python script monitors a list of UDP streams (unicast or multicast) and sends a Telegram alert if any stream becomes inactive or unreachable.
 
-Ideal for IPTV providers, network admins, or systems where reliable UDP streams are critical.
+Perfect for IPTV providers, network admins, or anyone relying on uninterrupted UDP stream delivery.
 
 ---
 
 ## 🚀 Features
 
-- ✅ Monitors multicast or unicast UDP streams.
-- ✅ Automatically retries failed checks.
-- ✅ Optional check for actual incoming data (recommended for multicast).
-- ✅ Sends alerts via Telegram bot when streams are down.
-- ✅ Scheduled to run periodically (default: every 5 minutes).
-- ✅ Detailed logs for monitoring and debugging.
+- ✅ Supports both multicast and unicast UDP streams.
+- ✅ Retries failed stream checks before declaring them down.
+- ✅ Optional requirement for receiving actual data (for more accurate checks).
+- ✅ Sends real-time alerts to Telegram when streams go down.
+- ✅ Uses a scheduler to run periodic checks (default: **every 1 hour**).
+- ✅ Detailed logs for monitoring, alerts, and debugging.
 
 ---
 
 ## 📦 Requirements
 
 - Python 3.6+
-- Required Python packages (install with pip):
+- Install dependencies using:
 
 ```bash
-pip install requests apscheduler
+pip install -r requirements.txt
+```
+
+Contents of `requirements.txt`:
+```txt
+requests==2.32.3
+apscheduler==3.10.4
 ```
 
 ---
 
 ## ⚙️ Configuration
 
-Create a file named `config.ini` in the same directory as the script:
+Create a file named `config.json` in the same directory:
 
-```ini
-[Telegram]
-bot_token = your_telegram_bot_token_here
-chat_id = your_chat_id_here
-
-[Streams]
-udp_streams = udp://239.1.1.1:1234,udp://239.1.1.2:5678
+```json
+{
+  "telegram": {
+    "bot_token": "your_telegram_bot_token_here",
+    "chat_id": "your_telegram_chat_id_here"
+  },
+  "streams": {
+    "udp": [
+      {
+        "name": "Channel 1",
+        "url": "udp://239.1.1.1:1234"
+      },
+      {
+        "name": "Channel 2",
+        "url": "udp://239.1.1.2:5678"
+      }
+    ]
+  }
+}
 ```
 
-- Replace `bot_token` and `chat_id` with your Telegram Bot credentials.
-- Add one or more comma-separated UDP stream URLs (must use the format `udp://host:port`).
+- Replace `bot_token` and `chat_id` with your Telegram bot credentials.
+- Add as many UDP streams as needed, each with a descriptive `name` and valid `url`.
 
 ---
 
 ## 📡 How It Works
 
-1. Parses each UDP stream from the config.
-2. Joins multicast groups or binds to unicast addresses.
-3. Optionally listens for actual incoming data.
-4. Retries a few times before marking a stream as down.
-5. Sends a detailed Telegram message if any streams are unreachable.
+1. Loads UDP streams and Telegram bot settings from `config.json`.
+2. Parses each stream's address and checks for availability.
+3. If multicast, joins the group before checking.
+4. Optionally listens for real UDP traffic (`require_data=True`).
+5. Retries failed streams before marking them as down.
+6. Sends a Telegram alert if any streams are unreachable.
 
 ---
 
 ## 🛠️ Usage
 
-Simply run the script:
+Run the script with:
 
 ```bash
 python main.py
 ```
 
-It will:
-- Start a background scheduler
-- Run checks every 5 minutes
-- Keep the process alive
+What it does:
+- Immediately runs a stream check.
+- Starts a background scheduler that checks **every hour**.
+- Keeps running until terminated manually.
 
 ---
 
 ## 🔄 Customization
 
-You can tweak these inside the script:
+You can adjust the stream-check behavior by modifying the parameters inside the `scheduled_task()` function:
 
 ```python
-# Inside scheduled_task()
 check_channels(
     udp_streams,
-    timeout=10,             # Wait time in seconds for data (per attempt)
-    retry_attempts=2,       # Number of retries before declaring failure
-    retry_delay=2,          # Seconds to wait between retries
-    require_data=True       # Set to True to require actual UDP packets
+    timeout=10,             # Timeout per attempt (in seconds)
+    retry_attempts=2,       # Number of retries before failure
+    retry_delay=2,          # Delay between retries (in seconds)
+    require_data=True       # Set to True to require actual packet reception
 )
 ```
 
@@ -90,13 +108,16 @@ check_channels(
 
 ## 📬 Telegram Bot Setup
 
-1. Start a chat with [BotFather](https://t.me/BotFather)
+1. Message [@BotFather](https://t.me/BotFather)
 2. Create a new bot: `/newbot`
-3. Get the `bot_token`
-4. Get your `chat_id`:
-   - Start a chat with your bot.
-   - Visit: `https://api.telegram.org/bot<your_token>/getUpdates`
-   - Find your chat ID in the response.
+3. Copy the generated `bot_token`
+4. To find your chat ID:
+   - Start a conversation with your bot.
+   - Visit:  
+     ```
+     https://api.telegram.org/bot<your_bot_token>/getUpdates
+     ```
+   - Look for `"chat":{"id":...}` in the JSON response.
 
 ---
 
@@ -104,19 +125,21 @@ check_channels(
 
 ```
 🚨 IPTV Stream Alert 🚨
-The following streams are DOWN:
-- udp://239.1.1.1:1234: No response or timeout
+The following channels are DOWN:
+- Channel 1: No response or timeout
+- Channel 2: Invalid URL
 ```
 
 ---
 
 ## 📄 License
 
-MIT License — free to use, modify, and share.
+MIT License — free to use, modify, and distribute.
 
 ---
 
 ## 👨‍💻 Author
 
-Built with ❤️ by eyaadh.\
-Contact: eyaadh@eyaadh.net | Telegram: @eyaadh
+Built with ❤️ by **eyaadh**  
+📧 Email: eyaadh@eyaadh.net  
+💬 Telegram: [@eyaadh](https://t.me/eyaadh)
