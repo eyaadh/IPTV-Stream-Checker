@@ -38,7 +38,7 @@ bot_token = your_telegram_bot_token_here
 chat_id = your_chat_id_here
 
 [Streams]
-udp_streams = udp://239.1.1.1:1234, udp://239.1.1.2:5678
+udp_streams = udp://239.1.1.1:1234,udp://239.1.1.2:5678
 ```
 
 - Replace `bot_token` and `chat_id` with your Telegram Bot credentials.
