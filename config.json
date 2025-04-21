@@ -1,0 +1,12 @@
+{
+  "telegram": {
+    "bot_token": "443803693:AAE7CQhMNiHoOGf3IG79FVi3X1pjFxLGb1E",
+    "chat_id": "-1002100841898"
+  },
+  "streams": {
+    "udp": [
+      { "name": "KBS WORLD", "url": "udp://@239.1.1.1:1234" },
+      { "name": "AXN", "url": "udp://@239.1.1.2:1234" }
+    ]
+  }
+}
